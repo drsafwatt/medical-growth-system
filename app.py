@@ -1,9 +1,8 @@
-
 from flask import Flask, render_template, request, redirect, session
 import sqlite3, os
 
 app = Flask(__name__)
-app.secret_key = "finalsecret"
+app.secret_key = "premiumsecret"
 
 def db():
     return sqlite3.connect("database.db")
@@ -15,8 +14,6 @@ def init():
         c.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, role TEXT)")
         c.execute("INSERT INTO users (username,password,role) VALUES ('admin','admin','admin')")
         c.execute("CREATE TABLE leads (id INTEGER PRIMARY KEY, name TEXT, status TEXT)")
-        c.execute("CREATE TABLE settings (id INTEGER PRIMARY KEY, company TEXT, theme TEXT)")
-        c.execute("INSERT INTO settings (company,theme) VALUES ('Medical Growth System','light')")
         conn.commit()
         conn.close()
 
@@ -27,7 +24,7 @@ def dashboard():
     conn=db()
     leads=conn.execute("SELECT COUNT(*) FROM leads").fetchone()[0]
     users=conn.execute("SELECT COUNT(*) FROM users").fetchone()[0]
-    return render_template("dashboard.html",leads=leads,users=users)
+    return render_template("dashboard.html",leads=leads,users=users,user=session["user"])
 
 @app.route("/login",methods=["GET","POST"])
 def login():
@@ -49,8 +46,6 @@ def logout():
 
 @app.route("/users",methods=["GET","POST"])
 def users():
-    if session.get("role")!="admin":
-        return redirect("/")
     conn=db()
     if request.method=="POST":
         conn.execute("INSERT INTO users (username,password,role) VALUES (?,?,?)",
@@ -58,16 +53,6 @@ def users():
         conn.commit()
     data=conn.execute("SELECT * FROM users").fetchall()
     return render_template("users.html",data=data)
-
-@app.route("/settings",methods=["GET","POST"])
-def settings():
-    conn=db()
-    if request.method=="POST":
-        conn.execute("UPDATE settings SET company=?, theme=? WHERE id=1",
-        (request.form["company"],request.form["theme"]))
-        conn.commit()
-    data=conn.execute("SELECT * FROM settings").fetchone()
-    return render_template("settings.html",data=data)
 
 if __name__=="__main__":
     init()
