@@ -1,6 +1,23 @@
 
-<h1>Medical Growth Platform</h1>
-<a href="/leads">CRM</a> |
-<a href="/pharmacies">Pharmacies</a> |
-<a href="/influencers">Influencers</a> |
+<style>
+body{font-family:Arial;background:#f4f6f9}
+.sidebar{width:200px;float:left;background:#111;color:#fff;height:100vh;padding:20px}
+.content{margin-left:220px;padding:20px}
+.card{background:#fff;padding:20px;margin:10px;border-radius:8px}
+a{color:white;display:block;margin:10px 0}
+</style>
+
+<div class="sidebar">
+<h3>System</h3>
+<a href="/">Dashboard</a>
+<a href="/leads">Leads</a>
+<a href="/users">Users</a>
 <a href="/logout">Logout</a>
+</div>
+
+<div class="content">
+<h2>Dashboard</h2>
+<div class="card">Total Leads: {{leads}}</div>
+<div class="card">Total Users: {{users}}</div>
+<div class="card">Logged in: {{user}}</div>
+</div>
