@@ -1,20 +1,35 @@
 
 <style>
-body{font-family:Arial;background:#f4f6f9}
-.sidebar{width:200px;float:left;background:#2c3e50;color:#fff;height:100vh;padding:20px}
-.content{margin-left:220px;padding:20px}
-.card{background:#fff;padding:20px;margin:10px;border-radius:8px}
-a{color:white;display:block;margin:10px 0}
+body{margin:0;font-family:Inter,Arial;background:#f5f7fb}
+.sidebar{width:240px;background:#111827;height:100vh;color:#fff;position:fixed;padding:20px}
+.sidebar h2{margin-bottom:30px}
+.sidebar a{display:block;color:#9ca3af;margin:10px 0;text-decoration:none}
+.sidebar a:hover{color:#fff}
+.topbar{margin-left:240px;height:60px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid #eee}
+.content{margin-left:240px;padding:30px}
+.cards{display:flex;gap:20px}
+.card{background:#fff;padding:20px;border-radius:12px;flex:1;box-shadow:0 4px 10px rgba(0,0,0,0.05)}
+table{width:100%;background:#fff;border-radius:10px;border-collapse:collapse}
+td,th{padding:12px;border-bottom:1px solid #eee}
+button{background:#2563eb;color:white;border:none;padding:10px 15px;border-radius:6px}
+input,select{padding:8px;margin:5px;border:1px solid #ccc;border-radius:6px}
 </style>
+
 <div class="sidebar">
-<h3>System</h3>
+<h2>🚀 System</h2>
 <a href="/">Dashboard</a>
 <a href="/users">Users</a>
-<a href="/settings">Settings</a>
 <a href="/logout">Logout</a>
 </div>
+
+<div class="topbar">
+<div>Dashboard</div>
+<div>{{user}}</div>
+</div>
+
 <div class="content">
-<h2>Dashboard</h2>
-<div class="card">Leads: {{leads}}</div>
-<div class="card">Users: {{users}}</div>
+<div class="cards">
+<div class="card">Leads<br><b>{{leads}}</b></div>
+<div class="card">Users<br><b>{{users}}</b></div>
+</div>
 </div>

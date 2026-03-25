@@ -1,12 +1,48 @@
 
-<h2>Users</h2>
+<style>
+body{margin:0;font-family:Inter,Arial;background:#f5f7fb}
+.sidebar{width:240px;background:#111827;height:100vh;color:#fff;position:fixed;padding:20px}
+.sidebar h2{margin-bottom:30px}
+.sidebar a{display:block;color:#9ca3af;margin:10px 0;text-decoration:none}
+.sidebar a:hover{color:#fff}
+.topbar{margin-left:240px;height:60px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid #eee}
+.content{margin-left:240px;padding:30px}
+.cards{display:flex;gap:20px}
+.card{background:#fff;padding:20px;border-radius:12px;flex:1;box-shadow:0 4px 10px rgba(0,0,0,0.05)}
+table{width:100%;background:#fff;border-radius:10px;border-collapse:collapse}
+td,th{padding:12px;border-bottom:1px solid #eee}
+button{background:#2563eb;color:white;border:none;padding:10px 15px;border-radius:6px}
+input,select{padding:8px;margin:5px;border:1px solid #ccc;border-radius:6px}
+</style>
+
+<div class="sidebar">
+<h2>🚀 System</h2>
+<a href="/">Dashboard</a>
+<a href="/users">Users</a>
+<a href="/logout">Logout</a>
+</div>
+
+<div class="topbar">
+<div>Users</div>
+</div>
+
+<div class="content">
+<h2>Add User</h2>
 <form method="POST">
-<input name="username">
-<input name="password">
-<select name="role"><option>admin</option><option>sales</option></select>
+<input name="username" placeholder="Username">
+<input name="password" placeholder="Password">
+<select name="role">
+<option>admin</option>
+<option>sales</option>
+</select>
 <button>Add</button>
 </form>
+
+<h2>Users List</h2>
+<table>
+<tr><th>Username</th><th>Role</th></tr>
 {% for i in data %}
-<p>{{i[1]}} - {{i[3]}}</p>
+<tr><td>{{i[1]}}</td><td>{{i[3]}}</td></tr>
 {% endfor %}
-<a href="/">Back</a>
+</table>
+</div>
