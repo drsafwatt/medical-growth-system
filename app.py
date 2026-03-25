@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, session
 import sqlite3, os
 
@@ -15,16 +14,17 @@ def init():
         c.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, role TEXT)")
         c.execute("INSERT INTO users (username,password,role) VALUES ('admin','admin','admin')")
         c.execute("CREATE TABLE leads (id INTEGER PRIMARY KEY, company TEXT, value REAL, status TEXT)")
-        c.execute("CREATE TABLE pharmacies (id INTEGER PRIMARY KEY, name TEXT, area TEXT)")
-        c.execute("CREATE TABLE influencers (id INTEGER PRIMARY KEY, name TEXT, platform TEXT)")
         conn.commit()
         conn.close()
 
 @app.route("/")
-def home():
+def dashboard():
     if "user" not in session:
         return redirect("/login")
-    return render_template("dashboard.html")
+    conn = db()
+    leads = conn.execute("SELECT COUNT(*) FROM leads").fetchone()[0]
+    users = conn.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+    return render_template("dashboard.html", leads=leads, users=users, user=session["user"])
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -32,7 +32,7 @@ def login():
         u=request.form["username"]
         p=request.form["password"]
         conn=db()
-        res=conn.execute("SELECT * FROM users WHERE username=? AND password=?",(u,p)).fetchone()
+        res=conn.execute("SELECT * FROM users WHERE username=? AND password=?", (u,p)).fetchone()
         if res:
             session["user"]=u
             session["role"]=res[3]
@@ -46,33 +46,27 @@ def logout():
 
 @app.route("/leads", methods=["GET","POST"])
 def leads():
+    if "user" not in session:
+        return redirect("/login")
     conn=db()
     if request.method=="POST":
         conn.execute("INSERT INTO leads (company,value,status) VALUES (?,?,?)",
         (request.form["company"],request.form["value"],request.form["status"]))
         conn.commit()
     data=conn.execute("SELECT * FROM leads").fetchall()
-    return render_template("leads.html",data=data)
+    return render_template("leads.html", data=data)
 
-@app.route("/pharmacies", methods=["GET","POST"])
-def pharmacies():
+@app.route("/users", methods=["GET","POST"])
+def users():
+    if session.get("role")!="admin":
+        return redirect("/")
     conn=db()
     if request.method=="POST":
-        conn.execute("INSERT INTO pharmacies (name,area) VALUES (?,?)",
-        (request.form["name"],request.form["area"]))
+        conn.execute("INSERT INTO users (username,password,role) VALUES (?,?,?)",
+        (request.form["username"],request.form["password"],request.form["role"]))
         conn.commit()
-    data=conn.execute("SELECT * FROM pharmacies").fetchall()
-    return render_template("pharmacies.html",data=data)
-
-@app.route("/influencers", methods=["GET","POST"])
-def influencers():
-    conn=db()
-    if request.method=="POST":
-        conn.execute("INSERT INTO influencers (name,platform) VALUES (?,?)",
-        (request.form["name"],request.form["platform"]))
-        conn.commit()
-    data=conn.execute("SELECT * FROM influencers").fetchall()
-    return render_template("influencers.html",data=data)
+    data=conn.execute("SELECT * FROM users").fetchall()
+    return render_template("users.html", data=data)
 
 if __name__=="__main__":
     init()
