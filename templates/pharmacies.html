@@ -1,0 +1,13 @@
+
+<h2>Pharmacies</h2>
+<form method="POST">
+<input name="name" placeholder="Name">
+<input name="area" placeholder="Area">
+<button>Add</button>
+</form>
+<ul>
+{% for i in data %}
+<li>{{i[1]}} - {{i[2]}}</li>
+{% endfor %}
+</ul>
+<a href="/">Back</a>
